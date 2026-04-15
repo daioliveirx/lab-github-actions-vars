@@ -1,0 +1,40 @@
+name: Desafio de Variaveis e Escopos
+
+on:
+  workflow_dispatch:
+
+env:
+  APP_NAME: "Meu App Super Seguro"
+
+jobs:
+  build_app:
+    runs-on: ubuntu-latest
+    env:
+      BUILD_VERSION: "v1.0.0"
+    steps:
+      - name: Passo 1 e 2 - Variaveis e Escopos
+        run: |
+          echo "App: $APP_NAME"
+          echo "Versao: $BUILD_VERSION"
+          echo "STEP_TEMP=Temporaria" >> $GITHUB_ENV
+
+      - name: Passo 3 - Auditoria
+        run: |
+          echo "Usuario: $GITHUB_ACTOR"
+          echo "Repositorio: $GITHUB_REPOSITORY"
+          echo "SO: $RUNNER_OS"
+
+      - name: Passo 4 e 5 - Variavel Dinamica
+        run: |
+          VALOR_ALEATORIO=$RANDOM
+          echo "BUILD_HASH=$VALOR_ALEATORIO" >> $GITHUB_ENV
+          echo "O hash gerado para este build foi: $VALOR_ALEATORIO"
+
+  deploy_app:
+    needs: build_app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Passo 6 - Secrets e Vars
+        run: |
+          echo "URL do Ambiente: ${{ vars.URL_AMBIENTE }}"
+          echo "Token da API: ${{ secrets.API_TOKEN_PROD }}"
